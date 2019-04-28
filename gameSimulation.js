@@ -1,12 +1,8 @@
-const width = window.innerWidth || document.documentElement.clientWidth;
-const height = window.innerHeight || document.documentElement.clientHeight;
-
 class GameSimulation {
 
   // INITIALIZATION
   constructor(size) {
     this.size = size;
-    this.cellSize = Math.floor(width / size);
     this.entities = this.initEntities(this.size);
   }
 
@@ -59,12 +55,22 @@ class GameSimulation {
 
 
   // Set Entities
-  setEntities(entityArray) {
+  setEntitiesSafe(entityArray) {
     for (var row = 0; row < this.size; row++) {
       for (var col = 0; col < this.size; col++) {
         this.entities[row][col] = entityArray[row][col];
       }
     }
+  }
+
+  setEntities(entityArray) {
+    this.entities = entityArray;
+  }
+
+
+  // Get Entities
+  getEntities() {
+    return this.entities;
   }
 
 
@@ -73,13 +79,18 @@ class GameSimulation {
     this.entities[row][col] = 1;
   }
 
+  // Kill an Entity
+  killEntity(row, col) {
+    this.entities[row][col] = 0;
+  }
+
 
   // Initialize Entities
-  initEntities(size) {
+  initEntities() {
     const entitiesArray = [];
-    for (var i = 0; i < size; i++) {
+    for (var i = 0; i < this.size; i++) {
       const rowArray = [];
-      for (var j = 0; j < size; j++) {
+      for (var j = 0; j < this.size; j++) {
         rowArray.push(0);
       }
       entitiesArray.push(rowArray);
