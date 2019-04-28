@@ -1,1 +1,3 @@
-"# Game Of Life" 
+# Game Of Life
+
+Game of Life simulation for the Web.
