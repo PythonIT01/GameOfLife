@@ -3,7 +3,7 @@ const height = window.innerHeight || document.documentElement.clientHeight;
 
 const canvas = document.getElementById('game');
 
-const size = 30;
+const size = 65;
 
 game = new GameSimulation(size);
 let pause = true;
@@ -13,30 +13,49 @@ if (width < height) {
   cellSize = Math.floor((width - 50) / size);
 }
 
+const getMousePosition = function(e) {
+  const mouseX = e.pageX - canvas.offsetLeft;
+  const mouseY = e.pageY - canvas.offsetTop;
+
+  const pos = [0, 0];
+
+  pos[1] = Math.floor(mouseX / cellSize);
+  pos[0] = Math.floor(mouseY / cellSize);
+
+  return pos;
+}
+
 const canvasSize = cellSize * size;
 canvas.width = canvasSize;
 canvas.height = canvasSize;
 
 canvas.addEventListener('click', function(e) {
-  const mouseX = e.pageX - canvas.offsetLeft;
-  const mouseY = e.pageY - canvas.offsetTop;
+  pos = getMousePosition(e);
+  game.bearEntity(pos[0], pos[1]);
+  updateCanvas();
+}, false);
 
-  const col = Math.floor(mouseX / cellSize);
-  const row = Math.floor(mouseY / cellSize);
-  console.log(row, col);
-  game.bearEntity(row, col);
+canvas.addEventListener('auxclick', function(e) {
+  pos = getMousePosition(e);
+  game.killEntity(pos[0], pos[1]);
   updateCanvas();
 }, false);
 
 document.addEventListener('keypress', function(e) {
-  if (e.key = ' ') {
+  if (e.key == ' ') {
     if (pause) {
       pause = false;
     } else {
       pause = true;
     }
+  } else if (e.key == 'r') {
+    pause = true;
+    game.setEntities(game.initEntities());
+    updateCanvas();
   }
 })
+
+document.addEventListener('contextmenu', event => event.preventDefault());
 
 const gctx = canvas.getContext('2d');
 gctx.strokeRect(0, 0, canvasSize, canvasSize);
