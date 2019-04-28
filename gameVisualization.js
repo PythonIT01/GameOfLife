@@ -3,7 +3,7 @@ const height = window.innerHeight || document.documentElement.clientHeight;
 
 const canvas = document.getElementById('game');
 
-const size = 10;
+const size = 30;
 
 game = new GameSimulation(size);
 let pause = true;
@@ -17,9 +17,26 @@ const canvasSize = cellSize * size;
 canvas.width = canvasSize;
 canvas.height = canvasSize;
 
-canvas.addEventListener('entitychange', function(event) {
-  console.log('entitychange');
+canvas.addEventListener('click', function(e) {
+  const mouseX = e.pageX - canvas.offsetLeft;
+  const mouseY = e.pageY - canvas.offsetTop;
+
+  const col = Math.floor(mouseX / cellSize);
+  const row = Math.floor(mouseY / cellSize);
+  console.log(row, col);
+  game.bearEntity(row, col);
+  updateCanvas();
 }, false);
+
+document.addEventListener('keypress', function(e) {
+  if (e.key = ' ') {
+    if (pause) {
+      pause = false;
+    } else {
+      pause = true;
+    }
+  }
+})
 
 const gctx = canvas.getContext('2d');
 gctx.strokeRect(0, 0, canvasSize, canvasSize);
